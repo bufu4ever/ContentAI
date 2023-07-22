@@ -28,7 +28,7 @@ app.post('/content/generate', (req, res) => {
     const { PublishId, ContentToken, ArticleTitle, NoOfWords } = req.body;
 
     // יצירת תוכן HTML
-    let content = `<h1>${ArticleTitle}</h1><p>This is an example content</p>`;
+    let content = `<h1>${ArticleTitle}</h1><p>content</p>`;
 
     // יצירת שם קובץ
     let fileName = Math.random().toString(36).substring(2, 15) + '.html';
