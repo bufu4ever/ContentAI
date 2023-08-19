@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql');
+const {generateContent} = require('./Content');
 
 const app = express();
 app.use(express.json());
@@ -51,6 +52,7 @@ app.post('/content/generate', (req, res) => {
         }
     });
 });
+
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
