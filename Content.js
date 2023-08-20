@@ -118,11 +118,11 @@ async function ryte({ languageId, toneId, useCaseId, inputContexts }) {
 }
 
 async function generateContent(ArticleSubject, NumOfWords) {
-  let languageIdHebrew = '607c7c211ebe15000cbbc7b8';
+  const languageIdHebrew = '607c7c211ebe15000cbbc7b8';
   const useCaseBlogOutLineIdeaId = '60a40cf5da9d76000ccc2828';
   const useCaseBlogSectionWritingId = '60584cf2c2cdaa000c2a7954';
-  let toneIdInformative = '60ff8d3afc873e000c08e8b2';
-  let ContinueRytingId = '6223abf9ea8eb61e65b4e691';
+  const toneIdInformative = '60ff8d3afc873e000c08e8b2';
+  const ContinueRytingId = '6223abf9ea8eb61e65b4e691';
 
   const useCaseBlogOutLine = await useCaseDetail({ useCaseId: useCaseBlogOutLineIdeaId });
   const useCaseBlogSection = await useCaseDetail({ useCaseId: useCaseBlogSectionWritingId });
@@ -139,40 +139,32 @@ async function generateContent(ArticleSubject, NumOfWords) {
 
   let htmlContent = outputs1[0].toString();
 
-  // Remove unwanted tags and content
-  const regexTags = /<\/?(?:a|em)[^>]*>/gi;
-  const regexH3Key = /מילות מפתח: (.*?)\)/;
-  const regexH1Remove = /<h1[^>]*>[^<]*נושא הבלוג:<\/h1>/gi;
-  const regexH3Remove1 = /<h3[^>]*>[^<]*מתווה הבלוג:<\/h3>/gi;
-  const regexH3Remove2 = /<h3[^>]*>[^<]*מתאר בלוג:<\/h3>/gi;
-  const regexPRemove = /<p[^>]*style="text-align: right">[^<]*<\/p>/gi;
+  // List of regex patterns to clean up the content
+  const cleanupPatterns = [
+    /<\/?(?:a|em)[^>]*>/gi,
+    /מילות מפתח: (.*?)\)/,
+    /<h1[^>]*>[^<]*נושא הבלוג:<\/h1>/gi,
+    /<h3[^>]*>[^<]*מתווה הבלוג:<\/h3>/gi,
+    /<h3[^>]*>[^<]*מתאר בלוג:<\/h3>/gi,
+    /<p[^>]*style="text-align: right">[^<]*<\/p>/gi
+  ];
 
-  htmlContent = htmlContent
-    .replace(regexH3Key, '')
-    .replace(regexH1Remove, '')
-    .replace(regexH3Remove1, '')
-    .replace(regexH3Remove2, '')
-    .replace(regexPRemove, '')
-    .replace(regexTags, '');
+  cleanupPatterns.forEach(pattern => {
+    htmlContent = htmlContent.replace(pattern, '');
+  });
 
   // Function to count words in a paragraph
   function countWords(htmlString) {
-    if (!htmlString) {
-      return 0;
-    }
-    const regexSpaces = /\s+/g;
-    const text = htmlString.replace(regexSpaces, ' ').trim();
-    const words = text.split(' ');
-    return words.length;
+    const text = (htmlString || '').replace(/\s+/g, ' ').trim();
+    return text.split(' ').length;
   }
 
-  const regexH3 = /<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi;
-  regexH3.lastIndex = 0;
   let ArrParagraph = [];
   let totalWords = 0;
 
-  let match;
+  const regexH3 = /<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi;
 
+  let match;
   while ((match = regexH3.exec(htmlContent)) !== null) {
     const head = match[1].trim();
 
@@ -242,16 +234,12 @@ async function generateContent(ArticleSubject, NumOfWords) {
         break;
       }
     }
+    let concatenatedContent = ArrParagraph.map(paragraph => `<h3>${paragraph.head}</h3>${paragraph.Paragraph}`).join(' ');
+
+    console.log(concatenatedContent);
+    console.log("Total Words:", totalWords);
   }
-  let concatenatedContent = '';
-  ArrParagraph.forEach(paragraph => {
-    concatenatedContent += `<h3>${paragraph.head}</h3>` + paragraph.Paragraph + ' ';
-  });
-  concatenatedContent = concatenatedContent.replace(/\s+/g, ' ').trim();
-
-  console.log(concatenatedContent);
-  console.log("Total Words:", totalWords);
-
+  
 }
 generateContent("ציוד משרדי לעסקים", 1000);
 
