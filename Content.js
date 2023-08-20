@@ -243,10 +243,13 @@ async function generateContent(ArticleSubject, NumOfWords) {
       }
     }
   }
+  let concatenatedContent = '';
+  ArrParagraph.forEach(paragraph => {
+    concatenatedContent += `<h3>${paragraph.head}</h3>` + paragraph.Paragraph + ' ';
+  });
+  concatenatedContent = concatenatedContent.replace(/\s+/g, ' ').trim();
 
-  ArrParagraph = ArrParagraph.filter(paragraph => paragraph.NumOfWordsInParagraph > 0); 
-
-  console.log(ArrParagraph);
+  console.log(concatenatedContent);
   console.log("Total Words:", totalWords);
 
 }
