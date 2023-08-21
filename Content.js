@@ -234,14 +234,18 @@ async function generateContent(ArticleSubject, NumOfWords) {
         break;
       }
     }
-    let concatenatedContent = ArrParagraph.map(paragraph => `<h3>${paragraph.head}</h3>${paragraph.Paragraph}`).join(' ');
+    let concatenatedContent = `<div dir="rtl">` + ArrParagraph.map(paragraph => `<h3>${paragraph.head}</h3>${paragraph.Paragraph}`).join(' ') + `</div>`;
 
-    console.log(concatenatedContent);
-    console.log("Total Words:", totalWords);
+    // console.log(concatenatedContent);
+    // console.log("Total Words:", totalWords);
+    return {
+      content: concatenatedContent,
+      totalWords: totalWords
+  };
   }
   
 }
 generateContent("ציוד משרדי לעסקים", 1000);
 
-module.exports = generateContent;
+module.exports.generateContent = generateContent;
 

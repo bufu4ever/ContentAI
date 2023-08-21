@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
     database: 'contentaitable'
 });
 
-// התחבר למסד הנתונים
+// // התחבר למסד הנתונים
 connection.connect(function(err){
     if(err) {
         console.log('Error '+err.message);
@@ -53,6 +53,21 @@ app.post('/content/generate', (req, res) => {
     });
 });
 
+// שמירת תוכן בצורת HTML
+async function saveToFile() {
+    const result = await generateContent("ציוד משרדי לעסקים", 1000);
+    const filename = 'generatedContent.html';
+
+    fs.writeFile(filename, result.content, 'utf8', (err) => {
+        if (err) {
+            console.error("An error occurred:", err);
+        } else {
+            console.log(`Content saved to ${filename}. Total words: ${result.totalWords}`);
+        }
+    });
+}
+
+saveToFile();
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
